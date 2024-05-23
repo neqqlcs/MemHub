@@ -229,6 +229,7 @@
 
         // Helper function to get coordinates
         function getEventCoordinates(e) {
+            const rect = canvas.getBoundingClientRect(); 
             if (e.touches && e.touches.length > 0) {
                 return {
                     x: e.touches[0].clientX - canvas.offsetLeft,
