@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #130101;
+            font-family: Helvetica;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* Added to stack elements vertically */
+        }
+
+        h1 {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 2em;
+            margin-bottom: 50px;
+            font-weight: bold; 
+            background-color: rgb(0, 0, 0); 
+            padding: 10px 50px; 
+            border-radius: 10px; 
+            border: 1px solid rgb(255, 255, 255);
+            text-align: center; 
+            color: White;
+            margin-top: 5px; 
+        }
+
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.5em;
+            color: white;
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            width: 100%;
+            height: 380px;
+        }
+
+        .color-button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .hub {
+            color: black; 
+            background-color: rgb(255, 165, 0); 
+        }
+
+        .image-container {
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .reveal-button {
+            margin-top: 30px;
+        }
+        
+    </style>
+</head>
+<body>
+    <p style="color: white; font-size: 1.5em; text-align: center;">Do you know your Filipino logos? Let's draw from memory!</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h1>Memory <span class="hub">Hub</span></h1>
+                <p id="imageTitle">Text 1</p>
+                <canvas id="canvas"></canvas>
+                <div class="d-flex flex-wrap justify-content-center mt-3">
+                    <button class="color-button" data-color="red" style="background-color: red;"></button>
+                    <button class="color-button" data-color="orange" style="background-color: orange;"></button>
+                    <button class="color-button" data-color="yellow" style="background-color: yellow;"></button>
+                    <button class="color-button" data-color="green" style="background-color: green;"></button>
+                    <button class="color-button" data-color="blue" style="background-color: blue;"></button>
+                    <button class="color-button" data-color="purple" style="background-color: purple;"></button>
+                    <button class="color-button" data-color="white" style="background-color: white;"></button>
+                    <button class="color-button" data-color="black" style="background-color: black;"></button>
+                </div>
+                <div class="d-flex justify-content-center mt-3">
+                    <button class="btn btn-secondary mr-2 clear-button">Clear</button>
+                    <button class="btn btn-secondary mr-2 previous-button">Previous</button>
+                    <button class="btn btn-secondary next-button">Next</button>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <div class="image-container">
+                    <img id="image" src="" alt="Logo" class="img-fluid" style="display: none;">
+                    <button id="revealButton" class="btn btn-primary reveal-button">Reveal Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your custom JavaScript -->
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const colorButtons = document.querySelectorAll('.color-button');
+        const clearButton = document.querySelector('.clear-button');
+        const nextButton = document.querySelector('.next-button');
+        const previousButton = document.querySelector('.previous-button');
+
+        let isDrawing = false;
+        let currentColor = '#000'; // Default color
+        let currentImageIndex = 0; // Initial image index
+        const images = ["Andoks.jpg",
+                        "BearBrand.jpg",
+                        "Bench.png",
+                        "Chowkeng.jpg",
+                        "DatuPuti.png", 
+                        "Gcash.jpg",
+                        "Goldilocks.jpg",
+                        "GW.png",
+                        "Jabi.png",
+                        "MangInasal.jpeg", 
+                        "Metrobank.jpg",
+                        "MMSU.png",
+                        "Paymaya.jpg",
+                        "Petron.jpg", 
+                        "SM.jpg", 
+                        "RedHorse.jpg",
+                        "Rob.jpg",
+                        "SanMig.png", 
+                    ]; 
+        const imageTexts = ["Andoks",
+                            "Bear Brand",
+                            "Bench",
+                            "Chowking",
+                            "Datu Puti",
+                            "Gcash",
+                            "Goldilocks",
+                            "Greenwich",
+                            "Jollibee",
+                            "Mang Inasal",
+                            "Metrobank",
+                            "MMSU dear...",
+                            "PayMaya",
+                            "Petron",
+                            "SM",
+                            "Red Horse",
+                            "Robinsons",
+                            "San Miguel Corp"
+                        ];
+
+        // Set up canvas
+        canvas.width = canvas.clientWidth;
+        canvas.height = 400;
+
+        // Event listeners for color buttons
+        colorButtons.forEach(button => {
+            button.style.backgroundColor = button.dataset.color;
+            button.addEventListener('click', () => {
+                currentColor = button.dataset.color;
+            });
+        });
+
+        // Event listener for clearing the canvas
+        clearButton.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function hideImage() {
+            image.style.display = 'none';
+            revealButton.style.display = 'block'; // Show the reveal button
+        }
+
+        // Initial load of the first image
+        loadImage(images[currentImageIndex], imageTexts[currentImageIndex]);
+
+        // Event listener for next button
+        nextButton.addEventListener('click', () => {
+            currentImageIndex++;
+            if (currentImageIndex >= images.length) {
+                currentImageIndex = 0; // Loop back to the first image
+            }
+            loadImage(images[currentImageIndex], imageTexts[currentImageIndex]); // Update the text
+            clearCanvas();
+            hideImage();
+        });
+
+        // Event listener for previous button
+        previousButton.addEventListener('click', () => {
+            currentImageIndex--;
+            if (currentImageIndex < 0) {
+                currentImageIndex = images.length - 1; // Loop back to the last image
+            }
+            loadImage(images[currentImageIndex], imageTexts[currentImageIndex]); // Update the text
+            clearCanvas();
+            hideImage();
+        });
+
+        // Function to load an image and update the text
+        function loadImage(imagePath, text) {
+            const imageElement = document.getElementById('image');
+            const imageTitleElement = document.getElementById('imageTitle'); // Get the paragraph element
+            imageElement.onload = function() {
+                // Update the image source
+                imageElement.src = imagePath;
+            };
+            imageElement.src = imagePath;
+            imageTitleElement.textContent = text; // Update the text content
+        }
+
+        // Event listeners for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        const revealButton = document.getElementById('revealButton');
+        const image = document.getElementById('image');
+
+        // Event listener for reveal button
+        revealButton.addEventListener('click', () => {
+            image.style.display = 'block'; // Show the image
+            revealButton.style.display = 'none'; // Hide the reveal button
+        });
+    </script>
+</body>
+</html>
