@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #130101;
+            background: rgb(0,0,0);
+            background: linear-gradient(135deg, rgba(0,0,0,1) 20%, rgba(255,128,0,1) 50%, rgba(0,0,0,1) 80%); 
             font-family: Helvetica;
             margin: 0;
             display: flex;
@@ -22,10 +23,9 @@
             font-size: 2em;
             margin-bottom: 50px;
             font-weight: bold; 
-            background-color: rgb(0, 0, 0); 
+            background-color: rgb(24, 24, 24); 
             padding: 10px 50px; 
             border-radius: 10px; 
-            border: 1px solid rgb(255, 255, 255);
             text-align: center; 
             color: White;
             margin-top: 5px; 
@@ -42,7 +42,7 @@
             border: 1px solid #000;
             background-color: #fff;
             width: 100%;
-            height: 380px;
+            height: 100%;
         }
 
         .hub {
@@ -56,12 +56,12 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            height: 535px;
             text-align: center;
         }
 
         .reveal-button {
-            margin-top: 30px;
+            margin-top: 30px; 
         }
     </style>
 </head>
@@ -75,10 +75,10 @@
                 <canvas id="canvas"></canvas>
                 <div class="d-flex justify-content-center mt-3">
                     <div class="mr-5">
-                        <label for="colorDropdown" style="color: white;" style="width: auto;">Color:</label>
+                        <label for="colorDropdown" style="color: rgb(0, 0, 0);" style="width: auto;">Color:</label>
                     </div>
                     <div>
-                        <select id="colorDropdown" class="form-control" style="width: 100px;">
+                        <select id="colorDropdown" class="form-control" style="width: 100px; background-color: #66707A; font-size: 15px; color:#fff; border-color: #66707A;">
                             <option value="black" style="color: black;">Black</option>
                             <option value="red" style="color: red;">Red</option>
                             <option value="orange" style="color: orange;">Orange</option>
@@ -92,10 +92,10 @@
                 </div>                
                 <div class="d-flex justify-content-center mt-3">
                     <div class="mr-3">
-                        <label for="thicknessDropdown" style="color: white;">Thickness:</label>
+                        <label for="thicknessDropdown" style="color: rgb(0, 0, 0);">Thickness:</label>
                     </div>
                     <div>
-                        <select id="thicknessDropdown" class="form-control" style="width: 100px;">
+                        <select id="thicknessDropdown" class="form-control" style="width: 100px; background-color: #66707A; font-size: 15px; color:#fff; border-color: #66707A;">
                             <option value="1">1</option>
                             <option value="3">3</option>
                             <option value="6">6</option>
@@ -156,6 +156,7 @@
                         "SM.jpg", 
                         "RedHorse.jpg",
                         "Rob.jpg",
+                        "Rombab.jpg",
                         "SanMig.png", 
                     ]; 
         const imageTexts = ["Andoks",
@@ -175,6 +176,7 @@
                             "SM",
                             "Red Horse",
                             "Robinsons",
+                            "Romantic Baboy",
                             "San Miguel Corp"
                         ];
 
