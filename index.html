@@ -45,15 +45,6 @@
             height: 380px;
         }
 
-        .color-button {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 50%;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
         .hub {
             color: black; 
             background-color: rgb(255, 165, 0); 
@@ -72,7 +63,6 @@
         .reveal-button {
             margin-top: 30px;
         }
-        
     </style>
 </head>
 <body>
@@ -83,15 +73,37 @@
                 <h1>Memory <span class="hub">Hub</span></h1>
                 <p id="imageTitle">Text 1</p>
                 <canvas id="canvas"></canvas>
-                <div class="d-flex flex-wrap justify-content-center mt-3">
-                    <button class="color-button" data-color="red" style="background-color: red;"></button>
-                    <button class="color-button" data-color="orange" style="background-color: orange;"></button>
-                    <button class="color-button" data-color="yellow" style="background-color: yellow;"></button>
-                    <button class="color-button" data-color="green" style="background-color: green;"></button>
-                    <button class="color-button" data-color="blue" style="background-color: blue;"></button>
-                    <button class="color-button" data-color="purple" style="background-color: purple;"></button>
-                    <button class="color-button" data-color="white" style="background-color: white;"></button>
-                    <button class="color-button" data-color="black" style="background-color: black;"></button>
+                <div class="d-flex justify-content-center mt-3">
+                    <div class="mr-5">
+                        <label for="colorDropdown" style="color: white;" style="width: auto;">Color:</label>
+                    </div>
+                    <div>
+                        <select id="colorDropdown" class="form-control" style="width: 100px;">
+                            <option value="black" style="color: black;">Black</option>
+                            <option value="red" style="color: red;">Red</option>
+                            <option value="orange" style="color: orange;">Orange</option>
+                            <option value="yellow" style="color: yellow;">Yellow</option>
+                            <option value="green" style="color: green;">Green</option>
+                            <option value="blue" style="color: blue;">Blue</option>
+                            <option value="purple" style="color: purple;">Purple</option>
+                            <option value="white" style="color: white;">White</option>
+                        </select>
+                    </div>
+                </div>                
+                <div class="d-flex justify-content-center mt-3">
+                    <div class="mr-3">
+                        <label for="thicknessDropdown" style="color: white;">Thickness:</label>
+                    </div>
+                    <div>
+                        <select id="thicknessDropdown" class="form-control" style="width: 100px;">
+                            <option value="1">1</option>
+                            <option value="3">3</option>
+                            <option value="6">6</option>
+                            <option value="9">9</option>
+                            <option value="12">12</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="d-flex justify-content-center mt-3">
                     <button class="btn btn-secondary mr-2 clear-button">Clear</button>
@@ -117,13 +129,15 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const colorButtons = document.querySelectorAll('.color-button');
+        const colorDropdown = document.getElementById('colorDropdown');
+        const thicknessDropdown = document.getElementById('thicknessDropdown');
         const clearButton = document.querySelector('.clear-button');
         const nextButton = document.querySelector('.next-button');
         const previousButton = document.querySelector('.previous-button');
 
         let isDrawing = false;
         let currentColor = '#000'; // Default color
+        let currentThickness = 1; // Default thickness
         let currentImageIndex = 0; // Initial image index
         const images = ["Andoks.jpg",
                         "BearBrand.jpg",
@@ -142,7 +156,6 @@
                         "SM.jpg", 
                         "RedHorse.jpg",
                         "Rob.jpg",
-                        "Rombab.jpg",
                         "SanMig.png", 
                     ]; 
         const imageTexts = ["Andoks",
@@ -162,7 +175,6 @@
                             "SM",
                             "Red Horse",
                             "Robinsons",
-                            "Romantic Baboy",
                             "San Miguel Corp"
                         ];
 
@@ -170,12 +182,14 @@
         canvas.width = canvas.clientWidth;
         canvas.height = 400;
 
-        // Event listeners for color buttons
-        colorButtons.forEach(button => {
-            button.style.backgroundColor = button.dataset.color;
-            button.addEventListener('click', () => {
-                currentColor = button.dataset.color;
-            });
+        // Event listener for color dropdown
+        colorDropdown.addEventListener('change', (event) => {
+            currentColor = event.target.value;
+        });
+
+        // Event listener for thickness dropdown
+        thicknessDropdown.addEventListener('change', (event) => {
+            currentThickness = parseInt(event.target.value);
         });
 
         // Event listener for clearing the canvas
@@ -268,7 +282,7 @@
             if (!isDrawing) return;
             const { x, y } = getEventCoordinates(e);
             ctx.strokeStyle = currentColor;
-            ctx.lineWidth = 5;
+            ctx.lineWidth = currentThickness;
             ctx.lineCap = 'round';
             ctx.lineTo(x, y);
             ctx.stroke();
